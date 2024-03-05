@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 
 from __future__ import annotations
+from security import safe_command
 
 """
 Tool to help automate changes needed in commits during and after releases
@@ -72,7 +73,7 @@ class NoGitTagsError(Exception): ...  # noqa: E701,E761
 # Maybe we vendor packaging library
 def get_git_tags(versions_only: bool = True) -> List[str]:
     """Pull out all tags or calvers only"""
-    cp = run(["git", "tag"], stdout=PIPE, stderr=PIPE, check=True, encoding="utf8")
+    cp = safe_command.run(run, ["git", "tag"], stdout=PIPE, stderr=PIPE, check=True, encoding="utf8")
     if not cp.stdout:
         LOG.error(f"Returned no git tags stdout: {cp.stderr}")
         raise NoGitTagsError

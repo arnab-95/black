@@ -6,6 +6,7 @@ import logging
 import os
 import sys
 from subprocess import PIPE, Popen, check_output, run
+from security import safe_command
 
 
 def git(*args: str) -> str:
@@ -42,11 +43,10 @@ def blackify(base_branch: str, black_command: str, logger: logging.Logger) -> in
 
     for last_commit, commit in zip(commits, commits[1:]):
         allow_empty = (
-            b"--allow-empty" in run(["git", "apply", "-h"], stdout=PIPE).stdout
+            b"--allow-empty" in safe_command.run(run, ["git", "apply", "-h"], stdout=PIPE).stdout
         )
-        quiet = b"--quiet" in run(["git", "apply", "-h"], stdout=PIPE).stdout
-        git_diff = Popen(
-            [
+        quiet = b"--quiet" in safe_command.run(run, ["git", "apply", "-h"], stdout=PIPE).stdout
+        git_diff = safe_command.run(Popen, [
                 "git",
                 "diff",
                 "--binary",
@@ -55,8 +55,7 @@ def blackify(base_branch: str, black_command: str, logger: logging.Logger) -> in
             ],
             stdout=PIPE,
         )
-        git_apply = Popen(
-            [
+        git_apply = safe_command.run(Popen, [
                 "git",
                 "apply",
             ]
