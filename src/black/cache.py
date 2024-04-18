@@ -113,8 +113,8 @@ class Cache:
         The first contains paths of files that modified on disk or are not in the
         cache. The other contains paths to non-modified files.
         """
-        changed: Set[Path] = set()
-        done: Set[Path] = set()
+        changed: Set[Path] = field(default_factory=set)
+        done: Set[Path] = field(default_factory=set)
         for src in sources:
             if self.is_changed(src):
                 changed.add(src)
