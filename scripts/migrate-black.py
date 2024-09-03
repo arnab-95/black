@@ -35,7 +35,7 @@ def blackify(base_branch: str, black_command: str, logger: logging.Logger) -> in
     ).split()
     for commit in commits:
         git("checkout", commit, "-b%s-black" % commit)
-        check_output(black_command, shell=True)
+        check_output(black_command, shell=False)
         git("commit", "-aqm", "blackify")
 
     git("checkout", base_branch, "-b%s-black" % current_branch)
