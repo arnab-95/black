@@ -29,6 +29,7 @@ from typing import Any
 import click
 import urllib3
 from packaging.version import Version
+from security import safe_command
 
 if sys.version_info >= (3, 8):
     from typing import Final, Literal
@@ -178,7 +179,7 @@ def comment_body(
         "compare", str(baseline), str(target), "--quiet", "--check"
     ]
     # fmt: on
-    proc = subprocess.run(cmd, stdout=subprocess.PIPE, encoding="utf-8")
+    proc = safe_command.run(subprocess.run, cmd, stdout=subprocess.PIPE, encoding="utf-8")
     if not proc.returncode:
         body = (
             f"**diff-shades** reports zero changes comparing this PR ({target_sha}) to"
